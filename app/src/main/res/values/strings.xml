@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Popular Movies</string>
+
+    <!--"start" - this string related for activity movie details-->
+    <string name="description_movie_poster">Contains poster of movie</string>
+    <string name="heading_release_date">publish date</string>
+    <string name="example_release_date">16–10–1996</string>
+    <string name="example_vote_average">7/10</string>
+    <string name="heading_vote_average">Vote Average</string>
+    <string name="example_original_title">Original Title</string>
+    <string name="example_details">disadoaudoasuodasuduasoiduasudoaudaad
+        dasioduaoudoasudois dasuod uasodasudasoudoasu saoduasoudi
+        das dusa dsdauoidu soduasiod  asuod asd sdasudo asudaso?</string>
+    <!--End-->
+
+
 </resources>
