@@ -1,10 +1,10 @@
-package com.example.hmod_.popularmoviesstageone;
+package com.example.hmod_.popularmoviesstageone.Adapter;
 
 
 public class Movie {
 
-    private String backdropPath;
-    private String homepage;
+//    private String backdropPath;
+//    private String homepage;
     private String overview;
     private String posterPath;
     private String releaseDate;
@@ -15,10 +15,10 @@ public class Movie {
     }
 
 
-    public Movie(String backdropPath, String homepage, String overview, String posterPath, String releaseDate, String title, Double voteAverage) {
+    public Movie(String overview, String posterPath, String releaseDate, String title, Double voteAverage) {
         super();
-        this.backdropPath = backdropPath;
-        this.homepage = homepage;
+//        this.backdropPath = backdropPath;
+//        this.homepage = homepage;
         this.overview = overview;
         this.posterPath = posterPath;
         this.releaseDate = releaseDate;
@@ -27,21 +27,21 @@ public class Movie {
     }
 
 
-    public String getBackdropPath() {
-        return backdropPath;
-    }
-
-    public void setBackdropPath(String backdropPath) {
-        this.backdropPath = backdropPath;
-    }
-
-    public String getHomepage() {
-        return homepage;
-    }
-
-    public void setHomepage(String homepage) {
-        this.homepage = homepage;
-    }
+//    public String getBackdropPath() {
+//        return backdropPath;
+//    }
+//
+//    public void setBackdropPath(String backdropPath) {
+//        this.backdropPath = backdropPath;
+//    }
+//
+//    public String getHomepage() {
+//        return homepage;
+//    }
+//
+//    public void setHomepage(String homepage) {
+//        this.homepage = homepage;
+//    }
 
     public String getOverview() {
         return overview;
@@ -75,12 +75,16 @@ public class Movie {
         this.title = title;
     }
 
-    public Double getVoteAverage() {
-        return voteAverage;
+    public String getVoteAverage() {
+        return String.valueOf(voteAverage);
     }
 
     public void setVoteAverage(Double voteAverage) {
         this.voteAverage = voteAverage;
     }
 
+    @Override
+    public String toString() {
+        return this.getPosterPath();
+    }
 }

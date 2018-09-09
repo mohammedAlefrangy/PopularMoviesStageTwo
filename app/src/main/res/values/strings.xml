@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Popular Movies</string>
+    <string name="Details">Details Movies</string>
 
     <!--"start" - this string related for activity movie details-->
     <string name="description_movie_poster">Contains poster of movie</string>
@@ -12,6 +13,11 @@
         dasioduaoudoasudois dasuod uasodasudasoudoasu saoduasoudi
         das dusa dsdauoidu soduasiod  asuod asd sdasudo asudaso?</string>
     <!--End-->
+
+    <string name="top_rated">Top Rated</string>
+    <string name="popular">Popular</string>
+    <string name="overview">Overview</string>
+    <string name="description_to_image">In here you should image about move</string>
 
 
 </resources>

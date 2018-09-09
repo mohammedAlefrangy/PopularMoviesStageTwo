@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.hmod_.popularmoviesstageone;
+package com.example.hmod_.popularmoviesstageone.NetWork;
 
 import android.net.Uri;
 
@@ -28,13 +28,36 @@ import java.util.Scanner;
 public class NetworkUtils {
 
 
+    private final static String TMDB_BASE_URL = "https://api.themoviedb.org/3";
+    private final static String MOVIE = "/movie";
+    private final static String POPULAR = "/popular";
+    private final static String TOP_RATED = "/top_rated";
+    private final String API_KEY_PARAM = "api_key";
+    //TODO (1) insert your api_key here
+    private final String KEY = "0185beec581fa94a036cc0a6240c5712";
 
-    final static String TMDB_BASE_URL =
-            "https://api.themoviedb.org/";
+    public NetworkUtils() {
+    }
 
 
-    public static URL buildUrl(String githubSearchQuery) {
-        Uri builtUri = Uri.parse(TMDB_BASE_URL).buildUpon()
+    public URL getPopularMoviesULR() {
+        Uri builtUri = Uri.parse(TMDB_BASE_URL+MOVIE+POPULAR).buildUpon()
+                .appendQueryParameter(API_KEY_PARAM, KEY)
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+
+    public URL getTopRatedMoviesULR() {
+        Uri builtUri = Uri.parse(TMDB_BASE_URL+MOVIE+TOP_RATED).buildUpon()
+                .appendQueryParameter(API_KEY_PARAM, KEY)
                 .build();
 
         URL url = null;
