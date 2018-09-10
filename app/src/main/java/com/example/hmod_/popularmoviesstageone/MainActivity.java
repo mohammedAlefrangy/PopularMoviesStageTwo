@@ -1,7 +1,11 @@
 package com.example.hmod_.popularmoviesstageone;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,6 +38,10 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
     private FetchMovieTask fetchMovieTask;
     private URL url;
     private NetworkUtils networkHandler;
+    private static final String DEBUG_TAG = "NetworkStatusExample";
+    boolean isWifiConn;
+    NetworkInfo networkInfo;
+    ConnectivityManager connMgr;
 
 
     @Override
@@ -53,15 +61,34 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
         recyclerView.setAdapter(movieAdapter);
         networkHandler = new NetworkUtils();
         url = networkHandler.getTopRatedMoviesULR();
-        fetchMovieTask = new FetchMovieTask();
-        fetchMovieTask.execute();
 
-        NetworkUtils networkUtils = new NetworkUtils();
-        URL url = networkUtils.getPopularMoviesULR();
-        //this log to show if the url correct or not, the mm get url
-        String mm = url.toString();
-        Log.d("Mohammed", mm);
+        isNetworkConnected();
+        if (isWifiConn == true) {
+            fetchMovieTask = new FetchMovieTask();
+            fetchMovieTask.execute();
+            NetworkUtils networkUtils = new NetworkUtils();
+            URL url = networkUtils.getPopularMoviesULR();
+            //this log to show if the url correct or not, the mm get url
+            String mm = url.toString();
+            Log.d("Mohammed", mm);
+        } else {
+            Toast.makeText(MainActivity.this, "You Should check the internt connection", Toast.LENGTH_SHORT).show();
+        }
 
+
+    }
+
+    //
+    private boolean isNetworkConnected() {
+
+        //I got this code from the site developer.android.com
+        //use this link to show the wep site https://developer.android.com/training/basics/network-ops/managing
+        connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        isWifiConn = networkInfo.isConnected();
+        Log.d(DEBUG_TAG, "Wifi connected: " + isWifiConn);
+
+        return isWifiConn;
     }
 
     private void openMovieDetailsView(int pos) {
@@ -98,10 +125,15 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
                 movies = new ArrayList<>();
                 movieAdapter = new AdapterForMovies(movies, getApplicationContext(), onItemClickListener);
                 recyclerView.setAdapter(movieAdapter);
-                networkHandler = new NetworkUtils();
-                url = networkHandler.getPopularMoviesULR();
-                fetchMovieTask = new FetchMovieTask();
-                fetchMovieTask.execute();
+                isNetworkConnected();
+                if (isWifiConn == true) {
+                    networkHandler = new NetworkUtils();
+                    url = networkHandler.getPopularMoviesULR();
+                    fetchMovieTask = new FetchMovieTask();
+                    fetchMovieTask.execute();
+                } else {
+                    Toast.makeText(MainActivity.this, "You Should check the internt connection", Toast.LENGTH_SHORT).show();
+                }
                 break;
 
             //if click on popular item in menu the app show top rated movies
@@ -110,11 +142,15 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
                 movies = new ArrayList<>();
                 movieAdapter = new AdapterForMovies(movies, getApplicationContext(), onItemClickListener);
                 recyclerView.setAdapter(movieAdapter);
-                networkHandler = new NetworkUtils();
-                url = networkHandler.getTopRatedMoviesULR();
-                fetchMovieTask = new FetchMovieTask();
-                fetchMovieTask.execute();
-
+                isNetworkConnected();
+                if (isWifiConn == true) {
+                    networkHandler = new NetworkUtils();
+                    url = networkHandler.getTopRatedMoviesULR();
+                    fetchMovieTask = new FetchMovieTask();
+                    fetchMovieTask.execute();
+                } else {
+                    Toast.makeText(MainActivity.this, "You Should check the internt connection", Toast.LENGTH_SHORT).show();
+                }
                 break;
             default:
                 Context context2 = MainActivity.this;
@@ -140,6 +176,7 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
 
             String jsonResponse = null;
             try {
+
                 jsonResponse = NetworkUtils.getResponseFromHttpUrl(url);
 //                Log.d("Mohammed1", jsonResponse.toString());
                 ParssJsonObject parssJsonObject = new ParssJsonObject(jsonResponse);
@@ -153,14 +190,16 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
 
         @Override
         protected void onPostExecute(ArrayList<Movie> movies1) {
-            super.onPostExecute(movies1);
-//            Log.d("Mohammed2", movies1.size() + "");
-            movies.addAll(movies1);
-//            String m = movies.get(0).toString();
-//            Log.d("Mohammed3", m);
-
-            movieAdapter.notifyDataSetChanged();
-
+            isNetworkConnected();
+            if (isWifiConn == true) {
+                super.onPostExecute(movies1);
+                movies.addAll(movies1);
+                if (movies1 != null) {
+                    movieAdapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(MainActivity.this, "You Should check the internt connection", Toast.LENGTH_SHORT).show();
+                }
+            }
         }
     }
 

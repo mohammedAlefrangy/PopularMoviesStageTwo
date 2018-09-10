@@ -7,101 +7,95 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="200dp"
-        android:orientation="horizontal"
-        android:padding="10dp">
-
-        <ImageView
-            android:id="@+id/imageview_poster"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/description_movie_poster"
-            android:src="@color/colorAccent" />
-
-    </LinearLayout>
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textview_original_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingBottom="5dp"
-            android:paddingTop="10dp"
-            android:text="@string/example_original_title"
-            android:textSize="@dimen/abc_text_size_headline_material" />
+
+            <ImageView
+                android:id="@+id/imageview_poster"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/description_movie_poster"
+                android:src="@color/colorAccent" />
+
+            <TextView
+                android:id="@+id/textview_original_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingBottom="5dp"
+                android:paddingTop="10dp"
+                android:text="@string/example_original_title"
+                android:textSize="@dimen/abc_text_size_headline_material" />
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:text="@string/heading_release_date"
-            android:textColor="@color/colorAccent"
-            android:textSize="@dimen/abc_text_size_medium_material" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="@string/heading_release_date"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/abc_text_size_medium_material" />
 
-        <TextView
-            android:id="@+id/textview_release_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingEnd="2dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="2dp"
-            android:text="@string/example_release_date"
-            android:textSize="@dimen/abc_text_size_large_material"
-            android:paddingStart="10dp" />
+            <TextView
+                android:id="@+id/textview_release_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="2dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="2dp"
+                android:paddingStart="10dp"
+                android:text="@string/example_release_date"
+                android:textSize="@dimen/abc_text_size_large_material" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:text="@string/heading_vote_average"
-            android:textColor="@color/colorAccent"
-            android:textSize="@dimen/abc_text_size_medium_material" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="@string/heading_vote_average"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/abc_text_size_medium_material" />
 
-        <TextView
-            android:id="@+id/textview_vote_average"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingEnd="2dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="2dp"
-            android:text="@string/example_vote_average"
-            android:textSize="@dimen/abc_text_size_large_material"
-            android:paddingStart="10dp" />
+            <TextView
+                android:id="@+id/textview_vote_average"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="2dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="2dp"
+                android:paddingStart="10dp"
+                android:text="@string/example_vote_average"
+                android:textSize="@dimen/abc_text_size_large_material" />
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:text="@string/overview"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="@string/overview"
 
-            android:textColor="@color/colorAccent"
-            android:textSize="@dimen/abc_text_size_medium_material" />
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/abc_text_size_medium_material" />
 
-        <TextView
-            android:id="@+id/textview_overview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/example_details"
-            android:textSize="15sp" />
+            <TextView
+                android:id="@+id/textview_overview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/example_details"
+                android:textSize="15sp" />
 
-</LinearLayout>
+        </LinearLayout>
+
     </ScrollView>
+
 
 </LinearLayout>
 
