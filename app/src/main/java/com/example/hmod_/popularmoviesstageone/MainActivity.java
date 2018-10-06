@@ -1,8 +1,6 @@
 package com.example.hmod_.popularmoviesstageone;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -19,7 +17,7 @@ import android.widget.Toast;
 
 import com.example.hmod_.popularmoviesstageone.Activity.DetailsMovieActivtiy;
 import com.example.hmod_.popularmoviesstageone.Adapter.AdapterForMovies;
-import com.example.hmod_.popularmoviesstageone.Adapter.Movie;
+import com.example.hmod_.popularmoviesstageone.DataEntity.Movie;
 import com.example.hmod_.popularmoviesstageone.NetWork.NetworkUtils;
 import com.example.hmod_.popularmoviesstageone.NetWork.ParssJsonObject;
 
@@ -44,10 +42,13 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
     ConnectivityManager connMgr;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         onItemClickListener = this;
 
         recyclerView = findViewById(R.id.my_recycler_view);
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
         movies = new ArrayList<>();
         movieAdapter = new AdapterForMovies(movies, getApplicationContext(), onItemClickListener);
         recyclerView.setAdapter(movieAdapter);
+        Log.d("movies", String.valueOf(movies));
         networkHandler = new NetworkUtils();
         url = networkHandler.getTopRatedMoviesULR();
 
@@ -102,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
         intent.putExtra(DetailsMovieActivtiy.VOTE_AVERAGE, movies.get(pos).getVoteAverage());
         intent.putExtra(DetailsMovieActivtiy.OVERVIEW, movies.get(pos).getOverview());
         intent.putExtra(DetailsMovieActivtiy.IMAGE_POSTER, movies.get(pos).getPosterPath());
+        intent.putExtra(DetailsMovieActivtiy.MOVIE_ID, movies.get(pos).getid());
 
         startActivity(intent);
 
@@ -121,36 +124,16 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
         switch (menuItemThatSelected) {
             //if click on popular item in menu the app show popular movies
             case R.id.popular:
-                recyclerView.setAdapter(null);
-                movies = new ArrayList<>();
-                movieAdapter = new AdapterForMovies(movies, getApplicationContext(), onItemClickListener);
-                recyclerView.setAdapter(movieAdapter);
-                isNetworkConnected();
-                if (isWifiConn == true) {
-                    networkHandler = new NetworkUtils();
-                    url = networkHandler.getPopularMoviesULR();
-                    fetchMovieTask = new FetchMovieTask();
-                    fetchMovieTask.execute();
-                } else {
-                    Toast.makeText(MainActivity.this, "You Should check the internt connection", Toast.LENGTH_SHORT).show();
-                }
+                getPopularMovies();
                 break;
 
             //if click on popular item in menu the app show top rated movies
             case R.id.top_rated:
-                recyclerView.setAdapter(null);
-                movies = new ArrayList<>();
-                movieAdapter = new AdapterForMovies(movies, getApplicationContext(), onItemClickListener);
-                recyclerView.setAdapter(movieAdapter);
-                isNetworkConnected();
-                if (isWifiConn == true) {
-                    networkHandler = new NetworkUtils();
-                    url = networkHandler.getTopRatedMoviesULR();
-                    fetchMovieTask = new FetchMovieTask();
-                    fetchMovieTask.execute();
-                } else {
-                    Toast.makeText(MainActivity.this, "You Should check the internt connection", Toast.LENGTH_SHORT).show();
-                }
+                getTopRatedMovies();
+                break;
+                //if click on popular item in menu the app show top rated movies
+            case R.id.favorites:
+                getFavoritesMovies();
                 break;
             default:
                 Context context2 = MainActivity.this;
@@ -176,9 +159,8 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
 
             String jsonResponse = null;
             try {
-
                 jsonResponse = NetworkUtils.getResponseFromHttpUrl(url);
-//                Log.d("Mohammed1", jsonResponse.toString());
+               Log.d("Mohammed1", jsonResponse.toString());
                 ParssJsonObject parssJsonObject = new ParssJsonObject(jsonResponse);
                 arrayList = (ArrayList<Movie>) parssJsonObject.extractFromJSON();
 
@@ -203,6 +185,51 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
         }
     }
 
+    private void getPopularMovies(){
+        recyclerView.setAdapter(null);
+        movies = new ArrayList<>();
+        movieAdapter = new AdapterForMovies(movies, getApplicationContext(), onItemClickListener);
+        recyclerView.setAdapter(movieAdapter);
+        isNetworkConnected();
+        if (isWifiConn == true) {
+            networkHandler = new NetworkUtils();
+            url = networkHandler.getPopularMoviesULR();
+            fetchMovieTask = new FetchMovieTask();
+            fetchMovieTask.execute();
+        } else {
+            Toast.makeText(MainActivity.this, "You Should check the internt connection", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void getTopRatedMovies(){
+        recyclerView.setAdapter(null);
+        movies = new ArrayList<>();
+        movieAdapter = new AdapterForMovies(movies, getApplicationContext(), onItemClickListener);
+        recyclerView.setAdapter(movieAdapter);
+        isNetworkConnected();
+        if (isWifiConn == true) {
+            networkHandler = new NetworkUtils();
+            url = networkHandler.getTopRatedMoviesULR();
+            fetchMovieTask = new FetchMovieTask();
+            fetchMovieTask.execute();
+        } else {
+            Toast.makeText(MainActivity.this, "You Should check the internt connection", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void getFavoritesMovies(){
+        recyclerView.setAdapter(null);
+        movies = new ArrayList<>();
+        movieAdapter = new AdapterForMovies(movies, getApplicationContext(), onItemClickListener);
+        recyclerView.setAdapter(movieAdapter);
+        isNetworkConnected();
+        if (isWifiConn == true) {
+            networkHandler = new NetworkUtils();
+            url = networkHandler.getTopRatedMoviesULR();
+            fetchMovieTask = new FetchMovieTask();
+            fetchMovieTask.execute();
+        } else {
+            Toast.makeText(MainActivity.this, "You Should check the internt connection", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }
 

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.hmod_.popularmoviesstageone.DataEntity.Movie;
 import com.example.hmod_.popularmoviesstageone.R;
 import com.squareup.picasso.Picasso;
 
@@ -19,7 +20,6 @@ public class AdapterForMovies extends RecyclerView.Adapter<AdapterForMovies.MyVi
     private final ArrayList<Movie> movies;
     private final Context context;
     private final OnItemClickListener onItemClickListener;
-
 
     public interface OnItemClickListener {
 

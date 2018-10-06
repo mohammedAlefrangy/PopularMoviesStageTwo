@@ -16,6 +16,7 @@
 package com.example.hmod_.popularmoviesstageone.NetWork;
 
 import android.net.Uri;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,16 +33,18 @@ public class NetworkUtils {
     private final static String MOVIE = "/movie";
     private final static String POPULAR = "/popular";
     private final static String TOP_RATED = "/top_rated";
+    private final static String VIDEOS = "/videos";
+
     private final String API_KEY_PARAM = "api_key";
     //TODO (1) insert your api_key here
-    private final String KEY = "";
+    private final String KEY = "0185beec581fa94a036cc0a6240c5712";
 
     public NetworkUtils() {
     }
 
 
     public URL getPopularMoviesULR() {
-        Uri builtUri = Uri.parse(TMDB_BASE_URL+MOVIE+POPULAR).buildUpon()
+        Uri builtUri = Uri.parse(TMDB_BASE_URL + MOVIE + POPULAR).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, KEY)
                 .build();
 
@@ -56,7 +59,7 @@ public class NetworkUtils {
     }
 
     public URL getTopRatedMoviesULR() {
-        Uri builtUri = Uri.parse(TMDB_BASE_URL+MOVIE+TOP_RATED).buildUpon()
+        Uri builtUri = Uri.parse(TMDB_BASE_URL + MOVIE + TOP_RATED).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, KEY)
                 .build();
 
@@ -67,6 +70,22 @@ public class NetworkUtils {
             e.printStackTrace();
         }
 
+        return url;
+    }
+
+    public URL getVideos(String ID) {
+        Uri builtUri = Uri.parse(TMDB_BASE_URL + MOVIE + "/"+ ID + VIDEOS).buildUpon()
+                .appendQueryParameter(API_KEY_PARAM, KEY)
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        Log.v("url", "Built Trailer URI " + url);
         return url;
     }
 

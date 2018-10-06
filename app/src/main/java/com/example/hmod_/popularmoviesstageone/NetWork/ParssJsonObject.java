@@ -1,7 +1,7 @@
 package com.example.hmod_.popularmoviesstageone.NetWork;
 
 
-import com.example.hmod_.popularmoviesstageone.Adapter.Movie;
+import com.example.hmod_.popularmoviesstageone.DataEntity.Movie;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +30,7 @@ public class ParssJsonObject {
                 movie.setReleaseDate(movieJsonObj.get("release_date").toString());
                 movie.setPosterPath("https://image.tmdb.org/t/p/w500" + movieJsonObj.get("poster_path").toString());
                 movie.setOverview(movieJsonObj.get("overview").toString());
+                movie.setid(movieJsonObj.get("id").toString());
 
                 movies.add(movie);
             }

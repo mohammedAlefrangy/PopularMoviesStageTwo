@@ -18,6 +18,13 @@
     <string name="popular">Popular</string>
     <string name="overview">Overview</string>
     <string name="description_to_image">In here you should image about move</string>
+    <string name="trailer_title">Trailer Title</string>
+    <string name="trailer_language">Trailer Language</string>
+    <string name="review_title">Review Title</string>
+    <string name="author">Author</string>
+    <string name="trailers">Trailers</string>
+    <string name="reviews">Reviews</string>
+    <string name="title_favorites">Favorites</string>
 
 
 </resources>

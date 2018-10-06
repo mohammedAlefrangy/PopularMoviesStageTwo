@@ -2,6 +2,8 @@
 
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -14,14 +16,14 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
 
             <ImageView
                 android:id="@+id/imageview_poster"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:contentDescription="@string/description_movie_poster"
                 android:src="@color/colorAccent" />
 
@@ -34,7 +36,6 @@
                 android:paddingTop="10dp"
                 android:text="@string/example_original_title"
                 android:textSize="@dimen/abc_text_size_headline_material" />
-
 
             <TextView
                 android:layout_width="wrap_content"
@@ -74,13 +75,11 @@
                 android:text="@string/example_vote_average"
                 android:textSize="@dimen/abc_text_size_large_material" />
 
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
                 android:text="@string/overview"
-
                 android:textColor="@color/colorAccent"
                 android:textSize="@dimen/abc_text_size_medium_material" />
 
@@ -92,10 +91,46 @@
                 android:text="@string/example_details"
                 android:textSize="15sp" />
 
+            <TextView
+                android:id="@+id/title_trailers"
+                style="@style/Base.TextAppearance.AppCompat.SearchResult.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="@string/trailers"
+                android:textColor="@color/colorAccent" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list_trailers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                />
+
+            <TextView
+                android:id="@+id/title_reviews"
+                style="@style/Base.TextAppearance.AppCompat.SearchResult.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="@string/reviews"
+                android:textColor="@color/colorAccent" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list_reviews"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                tools:listitem="@layout/review_activity">
+
+            </android.support.v7.widget.RecyclerView>
+
+
         </LinearLayout>
 
-    </ScrollView>
 
+
+    </ScrollView>
 
 </LinearLayout>
 
