@@ -1,10 +1,13 @@
 package com.example.hmod_.popularmoviesstageone;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,6 +20,8 @@ import android.widget.Toast;
 
 import com.example.hmod_.popularmoviesstageone.Activity.DetailsMovieActivtiy;
 import com.example.hmod_.popularmoviesstageone.Adapter.AdapterForMovies;
+import com.example.hmod_.popularmoviesstageone.DataBase.FavoritesMovieEntity;
+import com.example.hmod_.popularmoviesstageone.DataBase.FavoritesMoviesDatabase;
 import com.example.hmod_.popularmoviesstageone.DataEntity.Movie;
 import com.example.hmod_.popularmoviesstageone.NetWork.NetworkUtils;
 import com.example.hmod_.popularmoviesstageone.NetWork.ParssJsonObject;
@@ -24,6 +29,7 @@ import com.example.hmod_.popularmoviesstageone.NetWork.ParssJsonObject;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements AdapterForMovies.OnItemClickListener {
 
@@ -40,6 +46,9 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
     boolean isWifiConn;
     NetworkInfo networkInfo;
     ConnectivityManager connMgr;
+
+    List<FavoritesMovieEntity> favoritesMovieEntities;
+    private static final String TAG = "MainActivity";
 
 
 
@@ -77,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
             Toast.makeText(MainActivity.this, "You Should check the internt connection", Toast.LENGTH_SHORT).show();
         }
 
-
+        FavoritesMoviesDatabase mDb = FavoritesMoviesDatabase.getsInstance(getApplicationContext());
     }
 
     //
@@ -216,19 +225,22 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
         }
     }
     private void getFavoritesMovies(){
-        recyclerView.setAdapter(null);
-        movies = new ArrayList<>();
-        movieAdapter = new AdapterForMovies(movies, getApplicationContext(), onItemClickListener);
-        recyclerView.setAdapter(movieAdapter);
-        isNetworkConnected();
-        if (isWifiConn == true) {
-            networkHandler = new NetworkUtils();
-            url = networkHandler.getTopRatedMoviesULR();
-            fetchMovieTask = new FetchMovieTask();
-            fetchMovieTask.execute();
-        } else {
-            Toast.makeText(MainActivity.this, "You Should check the internt connection", Toast.LENGTH_SHORT).show();
-        }
+        Log.d(TAG, "getFavoritesMovies: " + "mohammed");
+        LiveData<List<FavoritesMovieEntity>> favMovieEntities = FavoritesMoviesDatabase.getsInstance(this).favoritesMovieDao().loadAllMovies();
+        favMovieEntities.observe(this, new Observer<List<FavoritesMovieEntity>>() {
+           @Override
+           public void onChanged(@Nullable List<FavoritesMovieEntity> favMovieEntitiy) {
+                movieAdapter.clear();
+//                Log.d(TAG, "getFavoritesMovies: " + favMovieEntities.getValue());
+               movieAdapter.addAllFavorites(favMovieEntitiy);
+//                Log.d(TAG, "getFavoritesMovies: " + movieAdapter.getItemCount());
+//
+////                movieAdapter.clear();
+////                movieAdapter.addAllFavorites(favMovieEntitiy);
+//
+//
+           }
+       });
     }
 
 }

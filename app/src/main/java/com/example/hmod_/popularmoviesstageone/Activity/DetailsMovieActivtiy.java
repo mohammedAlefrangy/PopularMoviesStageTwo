@@ -17,6 +17,9 @@ import android.widget.Toast;
 
 import com.example.hmod_.popularmoviesstageone.Adapter.AdapterMoviesTrailers;
 import com.example.hmod_.popularmoviesstageone.Adapter.AdapterReviewsTrailers;
+import com.example.hmod_.popularmoviesstageone.DataBase.FavoritesMovieEntity;
+import com.example.hmod_.popularmoviesstageone.DataBase.FavoritesMoviesDatabase;
+import com.example.hmod_.popularmoviesstageone.DataEntity.Movie;
 import com.example.hmod_.popularmoviesstageone.DataEntity.MovieReviewsEntity;
 import com.example.hmod_.popularmoviesstageone.DataEntity.MovieTrailerEntity;
 import com.example.hmod_.popularmoviesstageone.NetWork.NetworkUtils;
@@ -49,25 +52,27 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
     private static final String TRAILER_URL = "https://www.youtube.com/watch?v=";
 
     private Context context;
-    private RecyclerView trailersrecyclerView , reviewsRecyclerView;
 
 
     private ArrayList<MovieTrailerEntity> moviestrailer;
     private ArrayList<MovieReviewsEntity> moviesReviews;
     private AdapterMoviesTrailers movieAdapter;
-    private AdapterReviewsTrailers reviewsAdapter ;
-    private AdapterMoviesTrailers.OnItemClickListener onItemClickListener;
+    private AdapterReviewsTrailers reviewsAdapter;
 
 
-    private URL trailerUrl ,ReviewsUrl;
+    private URL trailerUrl, ReviewsUrl;
     private NetworkUtils networkHandler;
 
-    private String movieID , movieKey;
+    private String movieID, movieKey;
     TextView traile_name;
     ImageView play_icon;
 
     private static final String TAG = "DetailsMovieActivtiy";
     private boolean isButtonClicked = false; // You should add a boolean flag to record the button on/off state
+    private FavoritesMoviesDatabase mDb;
+    String title;
+    String image_poster;
+    private Movie movie ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,14 +85,16 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
         TextView textview_overview = findViewById(R.id.textview_overview);
         traile_name = findViewById(R.id.traile_name);
         play_icon = findViewById(R.id.play_icon);
-        ImageButton favImage = findViewById(R.id.favImage) ;
+        final ImageButton favImage = findViewById(R.id.favImage);
 
-        onItemClickListener = this;
+        AdapterMoviesTrailers.OnItemClickListener onItemClickListener = this;
+        mDb = FavoritesMoviesDatabase.getsInstance(getApplicationContext());
 
         Intent intentThatStartedThisActivity = getIntent();
 
         if (intentThatStartedThisActivity != null) {
-            String title = intentThatStartedThisActivity.getStringExtra(TITLE_TAG);
+
+            title = intentThatStartedThisActivity.getStringExtra(TITLE_TAG);
             textview_original_title.setText(title);
             String release_date = intentThatStartedThisActivity.getStringExtra(RELEASE_DATE);
             textview_release_date.setText(release_date);
@@ -97,12 +104,11 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
             textview_overview.setText(view_overview);
             movieID = intentThatStartedThisActivity.getStringExtra(MOVIE_ID);
 
-
-            String image_poster = intentThatStartedThisActivity.getStringExtra(IMAGE_POSTER);
+            image_poster = intentThatStartedThisActivity.getStringExtra(IMAGE_POSTER);
             Picasso.with(context).load(image_poster).into(imageview_poster);
         }
 
-        trailersrecyclerView = findViewById(R.id.list_trailers);
+        RecyclerView trailersrecyclerView = findViewById(R.id.list_trailers);
         trailersrecyclerView.setHasFixedSize(true);
         GridLayoutManager layoutManager = new GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false);
         trailersrecyclerView.setLayoutManager(layoutManager);
@@ -112,8 +118,7 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
         trailersrecyclerView.setAdapter(movieAdapter);
 
 
-
-        reviewsRecyclerView = findViewById(R.id.list_reviews);
+        RecyclerView reviewsRecyclerView = findViewById(R.id.list_reviews);
         reviewsRecyclerView.setHasFixedSize(true);
         GridLayoutManager layoutManagerReviews = new GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false);
         reviewsRecyclerView.setLayoutManager(layoutManagerReviews);
@@ -134,18 +139,29 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
         fetchReviewsTask.execute();
 
 
-            favImage.setOnClickListener(new View.OnClickListener() { // Then you should add add click listener for your button.
-                @Override
-                public void onClick(View v) {
-                    if (v.getId() == R.id.favImage) {
-                        isButtonClicked = !isButtonClicked; // toggle the boolean flag
-                        v.setBackgroundResource(isButtonClicked ? R.drawable.ic_like : R.drawable.ic_empty);
-                    }
+        favImage.setOnClickListener(new View.OnClickListener() { // Then you should add add click listener for your button.
+            @Override
+            public void onClick(View v) {
+//                    if (v.getId() == R.id.favImage) {
+//                        isButtonClicked = !isButtonClicked; // toggle the boolean flag
+//                        v.setBackgroundResource(isButtonClicked ? R.drawable.ic_like : R.drawable.ic_empty);
+//                    }
+                if (isButtonClicked) {
+                    mDb.favoritesMovieDao().deleteMovie(mDb.favoritesMovieDao().loadMovieById(Integer.parseInt(movieID)));
+                    favImage.setBackgroundResource(R.drawable.ic_empty);
+                    Log.d(TAG, "onClick: " + "ic_empty " + isButtonClicked);
+                    isButtonClicked = false;
+                } else {
+                    Log.d(TAG, "onClick: " + "ic_like1 " + isButtonClicked);
+                    mDb.favoritesMovieDao().insertMovie(new FavoritesMovieEntity(Integer.parseInt(movieID), movie.getTitle(), movie.getPosterPath()));
+                    favImage.setBackgroundResource(R.drawable.ic_like);
+                    Log.d(TAG, "onClick: " + "ic_like2 " + isButtonClicked);
+                    isButtonClicked = true;
+                    Log.d(TAG, "onClick: " + "ic_like3 " + isButtonClicked);
                 }
-            });
 
-
-
+            }
+        });
 
 
     }
@@ -157,12 +173,12 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
 
 
     private void openMovieTrailer(int clickedItemIndex) {
-        final String trailerURL = TRAILER_URL + moviestrailer.get(clickedItemIndex).getKey() ;
-        Intent youtubeIntent = new Intent(Intent.ACTION_VIEW , Uri.parse(trailerURL));
-        if (youtubeIntent.resolveActivity(getPackageManager()) != null){
+        final String trailerURL = TRAILER_URL + moviestrailer.get(clickedItemIndex).getKey();
+        Intent youtubeIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerURL));
+        if (youtubeIntent.resolveActivity(getPackageManager()) != null) {
             startActivity(youtubeIntent);
         }
-        Log.d(TAG, "openMovieTrailer: "+ trailerURL);
+        Log.d(TAG, "openMovieTrailer: " + trailerURL);
     }
 
     class FetchTrailerTask extends AsyncTask<String, Void, ArrayList<MovieTrailerEntity>> {

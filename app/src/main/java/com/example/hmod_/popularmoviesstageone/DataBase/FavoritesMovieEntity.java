@@ -1,51 +1,54 @@
 package com.example.hmod_.popularmoviesstageone.DataBase;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
-@Entity(tableName = "movies")
+@Entity(tableName = "favoritesMovies")
 public class FavoritesMovieEntity {
     @PrimaryKey
-    private int movieId;
-    private String movieName;
-    private String moviePoster;
+    private int idForMovie;
+    private String nameForMovie;
+    private String posterForMovie;
 
-    public FavoritesMovieEntity(int movieId, String movieName, String moviePoster) {
-        this.movieId = movieId;
-        this.movieName = movieName;
-        this.moviePoster = moviePoster;
+    public FavoritesMovieEntity(int idForMovie, String nameForMovie, String posterForMovie) {
+        this.idForMovie = idForMovie;
+        this.nameForMovie = nameForMovie;
+        this.posterForMovie = posterForMovie;
     }
 
-    public int getMovieId() {
-        return movieId;
+
+    public int getIdForMovie() {
+        return idForMovie;
     }
 
-    public void setMovieId(int movieId) {
-        this.movieId = movieId;
+    public void setIdForMovie(int idForMovie) {
+        this.idForMovie = idForMovie;
     }
 
-    public String getMovieName() {
-        return movieName;
+    public String getNameForMovie() {
+        return nameForMovie;
     }
 
-    public void setMovieName(String movieName) {
-        this.movieName = movieName;
+    public void setNameForMovie(String nameForMovie) {
+        this.nameForMovie = nameForMovie;
     }
 
-    public String getMoviePoster() {
-        return moviePoster;
+    public String getPosterForMovie() {
+        return posterForMovie;
     }
 
-    public void setMoviePoster(String moviePoster) {
-        this.moviePoster = moviePoster;
+    public void setPosterForMovie(String posterForMovie) {
+        this.posterForMovie = posterForMovie;
     }
+
 
     @Override
     public String toString() {
         return "FavMovieEntity{" +
-                "movieId=" + movieId +
-                ", movieName='" + movieName + '\'' +
-                ", moviePoster='" + moviePoster + '\'' +
+                "movieId=" + idForMovie +
+                ", movieName='" + nameForMovie + '\'' +
+                ", moviePoster='" + posterForMovie + '\'' +
                 '}';
     }
 }

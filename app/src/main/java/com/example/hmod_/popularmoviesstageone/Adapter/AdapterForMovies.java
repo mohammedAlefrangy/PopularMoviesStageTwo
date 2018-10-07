@@ -8,23 +8,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.hmod_.popularmoviesstageone.DataBase.FavoritesMovieEntity;
 import com.example.hmod_.popularmoviesstageone.DataEntity.Movie;
 import com.example.hmod_.popularmoviesstageone.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AdapterForMovies extends RecyclerView.Adapter<AdapterForMovies.MyViewHolder> {
 
 
-    private final ArrayList<Movie> movies;
+    private ArrayList<Movie> movies;
     private final Context context;
     private final OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener {
-
         void onListItemClick(int clickedItemIndex);
     }
+
+
 
     public AdapterForMovies(ArrayList<Movie> movies, Context context, OnItemClickListener onItemClickListener) {
         this.movies = movies;
@@ -52,7 +55,7 @@ public class AdapterForMovies extends RecyclerView.Adapter<AdapterForMovies.MyVi
         return movies.size();
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         final ImageView imageView;
 
@@ -70,6 +73,35 @@ public class AdapterForMovies extends RecyclerView.Adapter<AdapterForMovies.MyVi
             onItemClickListener.onListItemClick(clickedPosition);
         }
     }
+
+    public void clear() {
+        movies.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addMovie(Movie movie) {
+        movies.add(movie);
+        notifyItemInserted(movies.size() - 1);
+    }
+//
+//    public void addAll(List<Movie> movieList) {
+//        if (movieList != null) {
+//            for (Movie movie : movieList) {
+//                addMovie(movie);
+//            }
+//        }
+//    }
+//
+    public void addAllFavorites(List<FavoritesMovieEntity> favoritesMovieEntities) {
+        for (FavoritesMovieEntity favoritesMovieEntity : favoritesMovieEntities) {
+            addMovie(new Movie(String.valueOf(favoritesMovieEntity.getIdForMovie()), favoritesMovieEntity.getNameForMovie(), favoritesMovieEntity.getPosterForMovie()) );
+        }
+    }
+
+//    public void setTasks(ArrayList<FavoritesMovieEntity> taskEntries) {
+//        movies = taskEntries;
+//        notifyDataSetChanged();
+//    }
 
 
 }
