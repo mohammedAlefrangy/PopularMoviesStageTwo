@@ -34,6 +34,7 @@ public class NetworkUtils {
     private final static String POPULAR = "/popular";
     private final static String TOP_RATED = "/top_rated";
     private final static String VIDEOS = "/videos";
+    private final static String REVIEWS = "/reviews";
 
     private final String API_KEY_PARAM = "api_key";
     //TODO (1) insert your api_key here
@@ -75,6 +76,22 @@ public class NetworkUtils {
 
     public URL getVideos(String ID) {
         Uri builtUri = Uri.parse(TMDB_BASE_URL + MOVIE + "/"+ ID + VIDEOS).buildUpon()
+                .appendQueryParameter(API_KEY_PARAM, KEY)
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        Log.v("url", "Built Trailer URI " + url);
+        return url;
+    }
+
+    public URL getReviews(String IDReviews) {
+        Uri builtUri = Uri.parse(TMDB_BASE_URL + MOVIE + "/"+ IDReviews + REVIEWS).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, KEY)
                 .build();
 

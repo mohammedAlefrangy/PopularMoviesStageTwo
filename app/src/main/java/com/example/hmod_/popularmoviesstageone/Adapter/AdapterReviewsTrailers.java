@@ -7,82 +7,68 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.hmod_.popularmoviesstageone.DataEntity.MovieReviewsEntity;
 import com.example.hmod_.popularmoviesstageone.DataEntity.MovieTrailerEntity;
 import com.example.hmod_.popularmoviesstageone.R;
 
 import java.util.ArrayList;
 
 
-public class AdapterReviewsTrailers extends RecyclerView.Adapter<AdapterReviewsTrailers.TrailerHolder> {
+public class AdapterReviewsTrailers extends RecyclerView.Adapter<AdapterReviewsTrailers.ReviewsHolder> {
 
-    private ArrayList<MovieTrailerEntity> movies;
+    private ArrayList<MovieReviewsEntity> movies;
     private final Context context;
-    private final AdapterReviewsTrailers.OnItemClickListener onItemClickListener;
 
 
-    public interface OnItemClickListener {
-        void onListItemClick(int clickedItemIndex);
-    }
 
-    public AdapterReviewsTrailers(Context context, AdapterReviewsTrailers.OnItemClickListener onItemClickListener) {
+    public AdapterReviewsTrailers(Context context) {
         this.context = context;
-        this.onItemClickListener = onItemClickListener;
     }
 
 
     @Override
-    public TrailerHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ReviewsHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        return new TrailerHolder(LayoutInflater.from(context).inflate(R.layout.trailer_activity, parent, false));
+        return new ReviewsHolder(LayoutInflater.from(context).inflate(R.layout.review_activity, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(TrailerHolder holder, final int position) {
-        MovieTrailerEntity item = movies.get(position);
-        holder.name.setText(item.getName());
-//        holder.language.setText(item.getIso6391());
+    public void onBindViewHolder(ReviewsHolder holder, final int position) {
+        MovieReviewsEntity item = movies.get(position);
+        holder.review_author.setText(item.getauthor());
+        holder.review_title.setText(item.getcontent());
 
-        //        name = item.getName();
-//        language = item.getIso6391();
-//        traile_name.setText(name);
     }
 
-    public void setMovies (ArrayList<MovieTrailerEntity> moviesTrailer){
-        movies = moviesTrailer ;
+    public void setMovies(ArrayList<MovieReviewsEntity> moviesReviews) {
+        movies = moviesReviews;
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        if (movies != null){
+        if (movies != null) {
             return movies.size();
-        }else {
+        } else {
             return 0;
         }
 
 
     }
 
-    public class TrailerHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ReviewsHolder extends RecyclerView.ViewHolder {
 
-//        public TextView language;
-        public TextView name;
+        public TextView review_author;
+        public TextView review_title;
 
 
-        public TrailerHolder(View itemView) {
+        public ReviewsHolder(View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.traile_name);
-//            language = itemView.findViewById(R.id.traile_language);
-
-            itemView.setOnClickListener(this);
+            review_author = itemView.findViewById(R.id.review_author);
+            review_title = itemView.findViewById(R.id.review_title);
         }
 
 
-        @Override
-        public void onClick(View view) {
-            int clickedPosition = getAdapterPosition();
-            onItemClickListener.onListItemClick(clickedPosition);
-        }
     }
 
 }

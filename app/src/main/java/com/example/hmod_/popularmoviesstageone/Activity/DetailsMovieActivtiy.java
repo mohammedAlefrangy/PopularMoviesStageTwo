@@ -15,9 +15,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.hmod_.popularmoviesstageone.Adapter.AdapterMoviesTrailers;
+import com.example.hmod_.popularmoviesstageone.Adapter.AdapterReviewsTrailers;
+import com.example.hmod_.popularmoviesstageone.DataEntity.MovieReviewsEntity;
 import com.example.hmod_.popularmoviesstageone.DataEntity.MovieTrailerEntity;
 import com.example.hmod_.popularmoviesstageone.NetWork.NetworkUtils;
 import com.example.hmod_.popularmoviesstageone.NetWork.ParssJsonObject;
+import com.example.hmod_.popularmoviesstageone.NetWork.ParssReviewsObject;
 import com.example.hmod_.popularmoviesstageone.NetWork.ParssTrailerObject;
 import com.example.hmod_.popularmoviesstageone.R;
 import com.squareup.picasso.Picasso;
@@ -45,17 +48,20 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
     private static final String TRAILER_URL = "https://www.youtube.com/watch?v=";
 
     private Context context;
-    private RecyclerView trailersrecyclerView;
+    private RecyclerView trailersrecyclerView , reviewsRecyclerView;
 
     String[] keyTrailer;
     String[] nameTrailer;
     String[] languageTrailer;
 
     private ArrayList<MovieTrailerEntity> moviestrailer;
+    private ArrayList<MovieReviewsEntity> moviesReviews;
     private AdapterMoviesTrailers movieAdapter;
+    private AdapterReviewsTrailers reviewsAdapter ;
     private AdapterMoviesTrailers.OnItemClickListener onItemClickListener;
 
-    private URL trailerUrl;
+
+    private URL trailerUrl ,ReviewsUrl;
     private NetworkUtils networkHandler;
 
 
@@ -107,11 +113,26 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
         trailersrecyclerView.setAdapter(movieAdapter);
 
 
+
+        reviewsRecyclerView = findViewById(R.id.list_reviews);
+        reviewsRecyclerView.setHasFixedSize(true);
+        GridLayoutManager layoutManagerReviews = new GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false);
+        reviewsRecyclerView.setLayoutManager(layoutManagerReviews);
+
+        moviesReviews = new ArrayList<>();
+        reviewsAdapter = new AdapterReviewsTrailers(getApplicationContext());
+        reviewsRecyclerView.setAdapter(reviewsAdapter);
+
+
         NetworkUtils networkUtils = new NetworkUtils();
         trailerUrl = networkUtils.getVideos(movieID);
-        MovieTrailerEntity movieTrailerEntity = new MovieTrailerEntity();
+        ReviewsUrl = networkUtils.getReviews(movieID);
+
+//        MovieTrailerEntity movieTrailerEntity = new MovieTrailerEntity();
         FetchTrailerTask fetchMovieTask = new FetchTrailerTask();
         fetchMovieTask.execute();
+        FetchReviewsTask fetchReviewsTask = new FetchReviewsTask();
+        fetchReviewsTask.execute();
 
 
     }
@@ -159,6 +180,35 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
             movieAdapter.setMovies(moviestrailer);
 //            trailerData(movies1);
 //            uITrailer();
+        }
+    }
+
+    class FetchReviewsTask extends AsyncTask<String, Void, ArrayList<MovieReviewsEntity>> {
+        ArrayList<MovieReviewsEntity> arrayListReviews;
+
+        @Override
+        protected ArrayList<MovieReviewsEntity> doInBackground(String... strings) {
+            String jsonResponse = null;
+
+            try {
+                jsonResponse = NetworkUtils.getResponseFromHttpUrl(ReviewsUrl);
+                Log.d(TAG, "doInBackground: " + jsonResponse);
+                ParssReviewsObject parssJsonObject = new ParssReviewsObject(jsonResponse);
+                arrayListReviews = parssJsonObject.extractFromJSON();
+                Log.d(TAG, "doInBackgroundfffffffffffff: " + arrayListReviews.toString());
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return arrayListReviews;
+        }
+
+        @Override
+        public void onPostExecute(ArrayList<MovieReviewsEntity> movies1) {
+            super.onPostExecute(movies1);
+            moviesReviews.addAll(movies1);
+            Log.d(TAG, "onPostExecute: " + movies1);
+            reviewsAdapter.setMovies(moviesReviews);
         }
     }
 
