@@ -10,6 +10,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,9 +51,6 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
     private Context context;
     private RecyclerView trailersrecyclerView , reviewsRecyclerView;
 
-    String[] keyTrailer;
-    String[] nameTrailer;
-    String[] languageTrailer;
 
     private ArrayList<MovieTrailerEntity> moviestrailer;
     private ArrayList<MovieReviewsEntity> moviesReviews;
@@ -64,12 +62,12 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
     private URL trailerUrl ,ReviewsUrl;
     private NetworkUtils networkHandler;
 
-
     private String movieID , movieKey;
     TextView traile_name;
     ImageView play_icon;
 
     private static final String TAG = "DetailsMovieActivtiy";
+    private boolean isButtonClicked = false; // You should add a boolean flag to record the button on/off state
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +80,7 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
         TextView textview_overview = findViewById(R.id.textview_overview);
         traile_name = findViewById(R.id.traile_name);
         play_icon = findViewById(R.id.play_icon);
+        ImageButton favImage = findViewById(R.id.favImage) ;
 
         onItemClickListener = this;
 
@@ -133,6 +132,20 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
         fetchMovieTask.execute();
         FetchReviewsTask fetchReviewsTask = new FetchReviewsTask();
         fetchReviewsTask.execute();
+
+
+            favImage.setOnClickListener(new View.OnClickListener() { // Then you should add add click listener for your button.
+                @Override
+                public void onClick(View v) {
+                    if (v.getId() == R.id.favImage) {
+                        isButtonClicked = !isButtonClicked; // toggle the boolean flag
+                        v.setBackgroundResource(isButtonClicked ? R.drawable.ic_like : R.drawable.ic_empty);
+                    }
+                }
+            });
+
+
+
 
 
     }
