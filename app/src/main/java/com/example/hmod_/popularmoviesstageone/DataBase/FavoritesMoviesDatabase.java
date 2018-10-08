@@ -6,7 +6,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.util.Log;
 
-@Database(entities = {FavoritesMovieEntity.class}, version = 1, exportSchema = false)
+@Database(entities = {FavoritesMovieEntity.class}, version = 3, exportSchema = false)
 public abstract class FavoritesMoviesDatabase extends RoomDatabase {
     private static final String TAG = FavoritesMoviesDatabase.class.getSimpleName();
     private static final Object LOCK = new Object();
@@ -23,6 +23,7 @@ public abstract class FavoritesMoviesDatabase extends RoomDatabase {
                         FavoritesMoviesDatabase.class,
                         FavoritesMoviesDatabase.DATABASE_NAME)
                         // Has to Be MOVED TO BACKGROUND THREAD
+                        .fallbackToDestructiveMigration()
                         .allowMainThreadQueries()
                         .build();
             }

@@ -94,7 +94,10 @@ public class AdapterForMovies extends RecyclerView.Adapter<AdapterForMovies.MyVi
 //
     public void addAllFavorites(List<FavoritesMovieEntity> favoritesMovieEntities) {
         for (FavoritesMovieEntity favoritesMovieEntity : favoritesMovieEntities) {
-            addMovie(new Movie(String.valueOf(favoritesMovieEntity.getIdForMovie()), favoritesMovieEntity.getNameForMovie(), favoritesMovieEntity.getPosterForMovie()) );
+            addMovie(new Movie(favoritesMovieEntity.getOverViewForMovie(),favoritesMovieEntity.getPosterForMovie() ,
+                    favoritesMovieEntity.getReleaseDateForMovie() ,favoritesMovieEntity.getNameForMovie() ,
+                    favoritesMovieEntity.getVoteAverageForMovie() ,String.valueOf(favoritesMovieEntity.getIdForMovie())
+                    ));
         }
     }
 

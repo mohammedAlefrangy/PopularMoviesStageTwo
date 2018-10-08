@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
     private static final String TAG = "MainActivity";
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
             case R.id.top_rated:
                 getTopRatedMovies();
                 break;
-                //if click on popular item in menu the app show top rated movies
+            //if click on popular item in menu the app show top rated movies
             case R.id.favorites:
                 getFavoritesMovies();
                 break;
@@ -158,8 +157,8 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
+        Log.d(TAG, "onListItemClick: " + movies.get(clickedItemIndex).getOverview());
         openMovieDetailsView(clickedItemIndex);
-
     }
 
     class FetchMovieTask extends AsyncTask<String, Void, ArrayList<Movie>> implements com.example.hmod_.popularmoviesstageone.FetchMovieTask {
@@ -196,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
         }
     }
 
-    private void getPopularMovies(){
+    private void getPopularMovies() {
         recyclerView.setAdapter(null);
         movies = new ArrayList<>();
         movieAdapter = new AdapterForMovies(movies, getApplicationContext(), onItemClickListener);
@@ -211,7 +210,8 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
             Toast.makeText(MainActivity.this, "You Should check the internt connection", Toast.LENGTH_SHORT).show();
         }
     }
-    private void getTopRatedMovies(){
+
+    private void getTopRatedMovies() {
         recyclerView.setAdapter(null);
         movies = new ArrayList<>();
         movieAdapter = new AdapterForMovies(movies, getApplicationContext(), onItemClickListener);
@@ -227,18 +227,18 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
         }
     }
 
-    private void getFavoritesMovies(){
-        Log.d(TAG, "getFavoritesMovies: " + "mohammed");
+    private void getFavoritesMovies() {
+        Log.d(TAG, "getFavoritesMovies: ");
         ViewModel viewModel = ViewModelProviders.of(this).get(ViewModel.class);
 //        LiveData<List<FavoritesMovieEntity>> favMovieEntities = FavoritesMoviesDatabase.getsInstance(this).favoritesMovieDao().loadAllMovies();
         viewModel.getTasks().observe(this, new Observer<List<FavoritesMovieEntity>>() {
-           @Override
-           public void onChanged(@Nullable List<FavoritesMovieEntity> favMovieEntitiy) {
-               Log.d(TAG, "onChanged: "+ "load all movies");
+            @Override
+            public void onChanged(@Nullable List<FavoritesMovieEntity> favMovieEntitiy) {
+                Log.d(TAG, "onChanged: " + "load all movies");
                 movieAdapter.clear();
-               movieAdapter.addAllFavorites(favMovieEntitiy);
-           }
-       });
+                movieAdapter.addAllFavorites(favMovieEntitiy);
+            }
+        });
     }
 
 }

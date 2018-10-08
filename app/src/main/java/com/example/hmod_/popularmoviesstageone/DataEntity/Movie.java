@@ -2,8 +2,6 @@ package com.example.hmod_.popularmoviesstageone.DataEntity;
 
 public class Movie {
 
-    //    private String backdropPath;
-//    private String homepage;
     private String overview;
     private String posterPath;
     private String releaseDate;
@@ -11,14 +9,15 @@ public class Movie {
     private Double voteAverage;
     private String id;
 
-public Movie(){
+    public Movie() {
 
-}
+    }
 
-    public Movie(String id , String title, String posterPath ) {
+    public Movie(String id, String title, String posterPath) {
         this.id = id;
         this.title = title;
         this.posterPath = posterPath;
+
     }
 
 

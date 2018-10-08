@@ -59,8 +59,9 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
 
     private String movieID, movieKey;
     TextView traile_name;
+    String view_overview, release_date, vote_average;
     ImageView play_icon;
-    ImageButton favImage ;
+    ImageButton favImage;
 
     private static final String TAG = "DetailsMovieActivtiy";
     private boolean isButtonClicked = true; // You should add a boolean flag to record the button on/off state
@@ -88,14 +89,13 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
         Intent intentThatStartedThisActivity = getIntent();
 
         if (intentThatStartedThisActivity != null) {
-
             title = intentThatStartedThisActivity.getStringExtra(TITLE_TAG);
             textview_original_title.setText(title);
-            String release_date = intentThatStartedThisActivity.getStringExtra(RELEASE_DATE);
+            release_date = intentThatStartedThisActivity.getStringExtra(RELEASE_DATE);
             textview_release_date.setText(release_date);
-            String vote_average = intentThatStartedThisActivity.getStringExtra(VOTE_AVERAGE);
+            vote_average = intentThatStartedThisActivity.getStringExtra(VOTE_AVERAGE);
             textview_vote_average.setText(vote_average);
-            String view_overview = intentThatStartedThisActivity.getStringExtra(OVERVIEW);
+            view_overview = intentThatStartedThisActivity.getStringExtra(OVERVIEW);
             textview_overview.setText(view_overview);
             movieID = intentThatStartedThisActivity.getStringExtra(MOVIE_ID);
             image_poster = intentThatStartedThisActivity.getStringExtra(IMAGE_POSTER);
@@ -167,7 +167,8 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
 
 
         } else {
-            mDb.favoritesMovieDao().insertMovie(new FavoritesMovieEntity(Integer.parseInt(movieID), title, image_poster));
+            mDb.favoritesMovieDao().insertMovie(new FavoritesMovieEntity(Integer.parseInt(movieID), title, image_poster,
+                    view_overview, release_date,Double.valueOf(vote_average)));
             favImage.setBackgroundResource(R.drawable.ic_like);
             isButtonClicked = false;
         }
