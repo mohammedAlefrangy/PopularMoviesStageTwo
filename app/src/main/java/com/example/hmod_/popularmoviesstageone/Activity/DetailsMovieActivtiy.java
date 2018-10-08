@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.hmod_.popularmoviesstageone.Adapter.AdapterMoviesTrailers;
 import com.example.hmod_.popularmoviesstageone.Adapter.AdapterReviewsTrailers;
@@ -23,15 +22,10 @@ import com.example.hmod_.popularmoviesstageone.DataEntity.Movie;
 import com.example.hmod_.popularmoviesstageone.DataEntity.MovieReviewsEntity;
 import com.example.hmod_.popularmoviesstageone.DataEntity.MovieTrailerEntity;
 import com.example.hmod_.popularmoviesstageone.NetWork.NetworkUtils;
-import com.example.hmod_.popularmoviesstageone.NetWork.ParssJsonObject;
 import com.example.hmod_.popularmoviesstageone.NetWork.ParssReviewsObject;
 import com.example.hmod_.popularmoviesstageone.NetWork.ParssTrailerObject;
 import com.example.hmod_.popularmoviesstageone.R;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
@@ -66,18 +60,20 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
     private String movieID, movieKey;
     TextView traile_name;
     ImageView play_icon;
+    ImageButton favImage ;
 
     private static final String TAG = "DetailsMovieActivtiy";
-    private boolean isButtonClicked = false; // You should add a boolean flag to record the button on/off state
+    private boolean isButtonClicked = true; // You should add a boolean flag to record the button on/off state
     private FavoritesMoviesDatabase mDb;
     String title;
     String image_poster;
-    private Movie movie ;
+    private Movie movie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
+
         ImageView imageview_poster = findViewById(R.id.imageview_poster);
         TextView textview_release_date = findViewById(R.id.textview_release_date);
         TextView textview_original_title = findViewById(R.id.textview_original_title);
@@ -85,11 +81,10 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
         TextView textview_overview = findViewById(R.id.textview_overview);
         traile_name = findViewById(R.id.traile_name);
         play_icon = findViewById(R.id.play_icon);
-        final ImageButton favImage = findViewById(R.id.favImage);
+        favImage = findViewById(R.id.favImage);
 
         AdapterMoviesTrailers.OnItemClickListener onItemClickListener = this;
         mDb = FavoritesMoviesDatabase.getsInstance(getApplicationContext());
-
         Intent intentThatStartedThisActivity = getIntent();
 
         if (intentThatStartedThisActivity != null) {
@@ -103,7 +98,6 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
             String view_overview = intentThatStartedThisActivity.getStringExtra(OVERVIEW);
             textview_overview.setText(view_overview);
             movieID = intentThatStartedThisActivity.getStringExtra(MOVIE_ID);
-
             image_poster = intentThatStartedThisActivity.getStringExtra(IMAGE_POSTER);
             Picasso.with(context).load(image_poster).into(imageview_poster);
         }
@@ -138,30 +132,14 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
         FetchReviewsTask fetchReviewsTask = new FetchReviewsTask();
         fetchReviewsTask.execute();
 
+        if (mDb.favoritesMovieDao().loadMovieById(Integer.parseInt(movieID)) == null) {
+            favImage.setBackgroundResource(R.drawable.ic_empty);
+            isButtonClicked = false;
+        } else {
+            favImage.setBackgroundResource(R.drawable.ic_like);
+            isButtonClicked = true;
 
-        favImage.setOnClickListener(new View.OnClickListener() { // Then you should add add click listener for your button.
-            @Override
-            public void onClick(View v) {
-//                    if (v.getId() == R.id.favImage) {
-//                        isButtonClicked = !isButtonClicked; // toggle the boolean flag
-//                        v.setBackgroundResource(isButtonClicked ? R.drawable.ic_like : R.drawable.ic_empty);
-//                    }
-                if (isButtonClicked) {
-                    mDb.favoritesMovieDao().deleteMovie(mDb.favoritesMovieDao().loadMovieById(Integer.parseInt(movieID)));
-                    favImage.setBackgroundResource(R.drawable.ic_empty);
-                    Log.d(TAG, "onClick: " + "ic_empty " + isButtonClicked);
-                    isButtonClicked = false;
-                } else {
-                    Log.d(TAG, "onClick: " + "ic_like1 " + isButtonClicked);
-                    mDb.favoritesMovieDao().insertMovie(new FavoritesMovieEntity(Integer.parseInt(movieID), movie.getTitle(), movie.getPosterPath()));
-                    favImage.setBackgroundResource(R.drawable.ic_like);
-                    Log.d(TAG, "onClick: " + "ic_like2 " + isButtonClicked);
-                    isButtonClicked = true;
-                    Log.d(TAG, "onClick: " + "ic_like3 " + isButtonClicked);
-                }
-
-            }
-        });
+        }
 
 
     }
@@ -178,7 +156,23 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
         if (youtubeIntent.resolveActivity(getPackageManager()) != null) {
             startActivity(youtubeIntent);
         }
-        Log.d(TAG, "openMovieTrailer: " + trailerURL);
+    }
+
+    public void favImageClicked(View view) {
+
+        if (isButtonClicked) {
+            mDb.favoritesMovieDao().deleteMovie(mDb.favoritesMovieDao().loadMovieById(Integer.parseInt(movieID)));
+            favImage.setBackgroundResource(R.drawable.ic_empty);
+            isButtonClicked = true;
+
+
+        } else {
+            mDb.favoritesMovieDao().insertMovie(new FavoritesMovieEntity(Integer.parseInt(movieID), title, image_poster));
+            favImage.setBackgroundResource(R.drawable.ic_like);
+            isButtonClicked = false;
+        }
+        finish();
+
     }
 
     class FetchTrailerTask extends AsyncTask<String, Void, ArrayList<MovieTrailerEntity>> {
@@ -190,10 +184,8 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
 
             try {
                 jsonResponse = NetworkUtils.getResponseFromHttpUrl(trailerUrl);
-                Log.d(TAG, "doInBackground: " + jsonResponse);
                 ParssTrailerObject parssJsonObject = new ParssTrailerObject(jsonResponse);
                 arrayList = parssJsonObject.extractFromJSON();
-                Log.d(TAG, "doInBackgroundfffffffffffff: " + arrayList.toString());
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -205,10 +197,7 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
         public void onPostExecute(ArrayList<MovieTrailerEntity> movies1) {
             super.onPostExecute(movies1);
             moviestrailer.addAll(movies1);
-            Log.d(TAG, "onPostExecute: " + movies1);
             movieAdapter.setMovies(moviestrailer);
-//            trailerData(movies1);
-//            uITrailer();
         }
     }
 
@@ -221,10 +210,8 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
 
             try {
                 jsonResponse = NetworkUtils.getResponseFromHttpUrl(ReviewsUrl);
-                Log.d(TAG, "doInBackground: " + jsonResponse);
                 ParssReviewsObject parssJsonObject = new ParssReviewsObject(jsonResponse);
                 arrayListReviews = parssJsonObject.extractFromJSON();
-                Log.d(TAG, "doInBackgroundfffffffffffff: " + arrayListReviews.toString());
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -236,7 +223,6 @@ public class DetailsMovieActivtiy extends AppCompatActivity implements AdapterMo
         public void onPostExecute(ArrayList<MovieReviewsEntity> movies1) {
             super.onPostExecute(movies1);
             moviesReviews.addAll(movies1);
-            Log.d(TAG, "onPostExecute: " + movies1);
             reviewsAdapter.setMovies(moviesReviews);
         }
     }

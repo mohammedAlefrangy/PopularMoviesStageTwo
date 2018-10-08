@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.hmod_.popularmoviesstageone.DataEntity.MovieReviewsEntity;
-import com.example.hmod_.popularmoviesstageone.DataEntity.MovieTrailerEntity;
 import com.example.hmod_.popularmoviesstageone.R;
 
 import java.util.ArrayList;

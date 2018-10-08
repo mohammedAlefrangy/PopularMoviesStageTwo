@@ -2,6 +2,7 @@ package com.example.hmod_.popularmoviesstageone;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -22,6 +23,7 @@ import com.example.hmod_.popularmoviesstageone.Activity.DetailsMovieActivtiy;
 import com.example.hmod_.popularmoviesstageone.Adapter.AdapterForMovies;
 import com.example.hmod_.popularmoviesstageone.DataBase.FavoritesMovieEntity;
 import com.example.hmod_.popularmoviesstageone.DataBase.FavoritesMoviesDatabase;
+import com.example.hmod_.popularmoviesstageone.DataBase.ViewModel;
 import com.example.hmod_.popularmoviesstageone.DataEntity.Movie;
 import com.example.hmod_.popularmoviesstageone.NetWork.NetworkUtils;
 import com.example.hmod_.popularmoviesstageone.NetWork.ParssJsonObject;
@@ -30,6 +32,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements AdapterForMovies.OnItemClickListener {
 
@@ -169,7 +172,6 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
             String jsonResponse = null;
             try {
                 jsonResponse = NetworkUtils.getResponseFromHttpUrl(url);
-               Log.d("Mohammed1", jsonResponse.toString());
                 ParssJsonObject parssJsonObject = new ParssJsonObject(jsonResponse);
                 arrayList = (ArrayList<Movie>) parssJsonObject.extractFromJSON();
 
@@ -224,21 +226,17 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
             Toast.makeText(MainActivity.this, "You Should check the internt connection", Toast.LENGTH_SHORT).show();
         }
     }
+
     private void getFavoritesMovies(){
         Log.d(TAG, "getFavoritesMovies: " + "mohammed");
-        LiveData<List<FavoritesMovieEntity>> favMovieEntities = FavoritesMoviesDatabase.getsInstance(this).favoritesMovieDao().loadAllMovies();
-        favMovieEntities.observe(this, new Observer<List<FavoritesMovieEntity>>() {
+        ViewModel viewModel = ViewModelProviders.of(this).get(ViewModel.class);
+//        LiveData<List<FavoritesMovieEntity>> favMovieEntities = FavoritesMoviesDatabase.getsInstance(this).favoritesMovieDao().loadAllMovies();
+        viewModel.getTasks().observe(this, new Observer<List<FavoritesMovieEntity>>() {
            @Override
            public void onChanged(@Nullable List<FavoritesMovieEntity> favMovieEntitiy) {
+               Log.d(TAG, "onChanged: "+ "load all movies");
                 movieAdapter.clear();
-//                Log.d(TAG, "getFavoritesMovies: " + favMovieEntities.getValue());
                movieAdapter.addAllFavorites(favMovieEntitiy);
-//                Log.d(TAG, "getFavoritesMovies: " + movieAdapter.getItemCount());
-//
-////                movieAdapter.clear();
-////                movieAdapter.addAllFavorites(favMovieEntitiy);
-//
-//
            }
        });
     }

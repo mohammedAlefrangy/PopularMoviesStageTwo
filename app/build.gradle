@@ -38,9 +38,11 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:$room_version"
     annotationProcessor "android.arch.persistence.room:compiler:$room_version"
 
-    // ViewModel and LiveData
+    //LiveData
     def lifecycle_version = "1.1.1"
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+    def lifecycle_versionn = "2.0.0-beta01"
+    testImplementation "androidx.arch.core:core-testing:$lifecycle_versionn"
 
 
 }

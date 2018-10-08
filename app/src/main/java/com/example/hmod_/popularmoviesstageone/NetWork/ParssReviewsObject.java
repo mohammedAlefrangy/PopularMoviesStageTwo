@@ -4,7 +4,6 @@ package com.example.hmod_.popularmoviesstageone.NetWork;
 import android.util.Log;
 
 import com.example.hmod_.popularmoviesstageone.DataEntity.MovieReviewsEntity;
-import com.example.hmod_.popularmoviesstageone.DataEntity.MovieTrailerEntity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
