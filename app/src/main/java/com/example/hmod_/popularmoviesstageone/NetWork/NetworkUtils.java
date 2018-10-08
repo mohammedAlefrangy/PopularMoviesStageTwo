@@ -38,7 +38,7 @@ public class NetworkUtils {
 
     private final String API_KEY_PARAM = "api_key";
     //TODO (1) insert your api_key here
-    private final String KEY = "";
+    private final String KEY = "0185beec581fa94a036cc0a6240c5712";
 
     public NetworkUtils() {
     }

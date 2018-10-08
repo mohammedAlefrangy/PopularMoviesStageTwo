@@ -53,6 +53,11 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
     List<FavoritesMovieEntity> favoritesMovieEntities;
     private static final String TAG = "MainActivity";
 
+    private String CURRUNT_STAT;
+    private String POPULARE_STAT = "POPULARE";
+    private String TOPRATED_STAT = "TOPRATED";
+    private String FAVORITES_STAT = "FAVORITES";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +93,29 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
             Toast.makeText(MainActivity.this, "You Should check the internt connection", Toast.LENGTH_SHORT).show();
         }
 
+        if (savedInstanceState != null && savedInstanceState.getString("KEY") != null) {
+            if (savedInstanceState.getString("KEY").equals(POPULARE_STAT)) {
+                getPopularMovies();
+            }
+            if (savedInstanceState.getString("KEY").equals(TOPRATED_STAT)) {
+                getTopRatedMovies();
+            }
+            if (savedInstanceState.getString("KEY").equals(FAVORITES_STAT)) {
+                getFavoritesMovies();}
+        } else {
+            //default state
+            getPopularMovies();
+        }
+
         FavoritesMoviesDatabase mDb = FavoritesMoviesDatabase.getsInstance(getApplicationContext());
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        Log.d(TAG, "onSaveInstanceState: " + CURRUNT_STAT);
+        outState.putString("KEY", CURRUNT_STAT);
+        super.onSaveInstanceState(outState);
     }
 
     //
@@ -120,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
         startActivity(intent);
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -196,6 +224,10 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
     }
 
     private void getPopularMovies() {
+        CURRUNT_STAT = POPULARE_STAT;
+        Log.d(TAG, "getPopularMovies: "+ CURRUNT_STAT + POPULARE_STAT);
+
+        Log.d(TAG, "getPopularMovies: "+ "getPopularMovies");
         recyclerView.setAdapter(null);
         movies = new ArrayList<>();
         movieAdapter = new AdapterForMovies(movies, getApplicationContext(), onItemClickListener);
@@ -212,6 +244,8 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
     }
 
     private void getTopRatedMovies() {
+        CURRUNT_STAT = TOPRATED_STAT;
+        Log.d(TAG, "getPopularMovies: "+ CURRUNT_STAT + TOPRATED_STAT);
         recyclerView.setAdapter(null);
         movies = new ArrayList<>();
         movieAdapter = new AdapterForMovies(movies, getApplicationContext(), onItemClickListener);
@@ -228,15 +262,21 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
     }
 
     private void getFavoritesMovies() {
-        Log.d(TAG, "getFavoritesMovies: ");
+        CURRUNT_STAT = FAVORITES_STAT;
+        Log.d(TAG, "getFavoritesMovies: " + CURRUNT_STAT + FAVORITES_STAT);
         ViewModel viewModel = ViewModelProviders.of(this).get(ViewModel.class);
 //        LiveData<List<FavoritesMovieEntity>> favMovieEntities = FavoritesMoviesDatabase.getsInstance(this).favoritesMovieDao().loadAllMovies();
         viewModel.getTasks().observe(this, new Observer<List<FavoritesMovieEntity>>() {
             @Override
             public void onChanged(@Nullable List<FavoritesMovieEntity> favMovieEntitiy) {
-                Log.d(TAG, "onChanged: " + "load all movies");
-                movieAdapter.clear();
+//                movieAdapter.clear();
+                if (favMovieEntitiy == null)
+                    return;
+                FavoritesMovieEntity[] courses = new FavoritesMovieEntity[favMovieEntitiy.size()];
+                for (int i = 0; i < favMovieEntitiy.size(); i++)
+                    courses[i] = favMovieEntitiy.get(i);
                 movieAdapter.addAllFavorites(favMovieEntitiy);
+
             }
         });
     }
