@@ -269,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
         viewModel.getTasks().observe(this, new Observer<List<FavoritesMovieEntity>>() {
             @Override
             public void onChanged(@Nullable List<FavoritesMovieEntity> favMovieEntitiy) {
-//                movieAdapter.clear();
+               movieAdapter.clear();
                 if (favMovieEntitiy == null)
                     return;
                 FavoritesMovieEntity[] courses = new FavoritesMovieEntity[favMovieEntitiy.size()];
