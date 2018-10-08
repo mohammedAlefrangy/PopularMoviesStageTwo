@@ -77,32 +77,34 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
         movieAdapter = new AdapterForMovies(movies, getApplicationContext(), onItemClickListener);
         recyclerView.setAdapter(movieAdapter);
         Log.d("movies", String.valueOf(movies));
-        networkHandler = new NetworkUtils();
-        url = networkHandler.getTopRatedMoviesULR();
-
-        isNetworkConnected();
-        if (isWifiConn == true) {
-            fetchMovieTask = new FetchMovieTask();
-            fetchMovieTask.execute();
-            NetworkUtils networkUtils = new NetworkUtils();
-            URL url = networkUtils.getPopularMoviesULR();
-            //this log to show if the url correct or not, the mm get url
-            String mm = url.toString();
-            Log.d("Mohammed", mm);
-        } else {
-            Toast.makeText(MainActivity.this, "You Should check the internt connection", Toast.LENGTH_SHORT).show();
-        }
+//        networkHandler = new NetworkUtils();
+//        url = networkHandler.getTopRatedMoviesULR();
+//
+//        isNetworkConnected();
+//        if (isWifiConn == true) {
+//            fetchMovieTask = new FetchMovieTask();
+//            fetchMovieTask.execute();
+//            NetworkUtils networkUtils = new NetworkUtils();
+//            URL url = networkUtils.getPopularMoviesULR();
+//            //this log to show if the url correct or not, the mm get url
+//            String mm = url.toString();
+//            Log.d("Mohammed", mm);
+//        } else {
+//            Toast.makeText(MainActivity.this, "You Should check the internt connection", Toast.LENGTH_SHORT).show();
+//        }
 
         if (savedInstanceState != null && savedInstanceState.getString("KEY") != null) {
+            Log.d(TAG, "onCreate: "+ savedInstanceState.getString("Key"));
             if (savedInstanceState.getString("KEY").equals(POPULARE_STAT)) {
                 getPopularMovies();
             }
-            if (savedInstanceState.getString("KEY").equals(TOPRATED_STAT)) {
+             else if (savedInstanceState.getString("KEY").equals(TOPRATED_STAT)) {
                 getTopRatedMovies();
             }
-            if (savedInstanceState.getString("KEY").equals(FAVORITES_STAT)) {
+            else if (savedInstanceState.getString("KEY").equals(FAVORITES_STAT)) {
                 getFavoritesMovies();}
-        } else {
+        }
+        else {
             //default state
             getPopularMovies();
         }
