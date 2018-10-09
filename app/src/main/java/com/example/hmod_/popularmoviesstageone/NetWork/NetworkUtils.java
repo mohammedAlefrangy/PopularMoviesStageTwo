@@ -26,7 +26,7 @@ import java.net.URL;
 import java.util.Scanner;
 
 
-public class NetworkUtils {
+public final class NetworkUtils {
 
 
     private final static String TMDB_BASE_URL = "https://api.themoviedb.org/3";

@@ -1,5 +1,6 @@
 package com.example.hmod_.popularmoviesstageone;
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -8,6 +9,8 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Parcelable;
+import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -46,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
     private URL url;
     private NetworkUtils networkHandler;
     private static final String DEBUG_TAG = "NetworkStatusExample";
-    boolean isWifiConn;
+    private boolean isWifiConn;
     NetworkInfo networkInfo;
     ConnectivityManager connMgr;
 
@@ -57,7 +60,14 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
     private String POPULARE_STAT = "POPULARE";
     private String TOPRATED_STAT = "TOPRATED";
     private String FAVORITES_STAT = "FAVORITES";
+    private static final String SCROLL_POSITION = "scroll_position";
 
+    GridLayoutManager layoutManager ;
+//    private static final String LIST_STATE = "list_state";
+//    private Parcelable savedRecyclerState ;
+//    private static final String BUNDEL_RECYCLER_LAYOUT = "recycler_layout";
+//    private ArrayList<Movie> moviesInstance = new ArrayList<>() ;
+////    private String POSITION = "position" ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
 
         recyclerView = findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
+        layoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
 
@@ -95,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
 
         if (savedInstanceState != null && savedInstanceState.getString("KEY") != null) {
             Log.d(TAG, "onCreate: "+ savedInstanceState.getString("Key"));
-            if (savedInstanceState.getString("KEY").equals(POPULARE_STAT)) {
+            if (savedInstanceState.getString("KEY").equals(POPULARE_STAT)){
                 getPopularMovies();
             }
              else if (savedInstanceState.getString("KEY").equals(TOPRATED_STAT)) {
@@ -109,16 +119,42 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
             getPopularMovies();
         }
 
+
         FavoritesMoviesDatabase mDb = FavoritesMoviesDatabase.getsInstance(getApplicationContext());
 
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        Log.d(TAG, "onSaveInstanceState: " + CURRUNT_STAT);
         outState.putString("KEY", CURRUNT_STAT);
+//        outState.putString("KEY", POSITION);
+//        Log.d(TAG, "onSaveInstanceState: " + "KEY " + POSITION);
         super.onSaveInstanceState(outState);
+
     }
+
+
+//    @Override
+//    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+//        super.onSaveInstanceState(outState, outPersistentState);
+//        outState.putParcelable(SCROLL_POSITION , recyclerView.getLayoutManager().onSaveInstanceState());
+//    }
+//
+//    @Override
+//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+//        super.onRestoreInstanceState(savedInstanceState);
+//        Parcelable listState = savedInstanceState.getParcelable(SCROLL_POSITION);
+//        recyclerView.getLayoutManager().onRestoreInstanceState(listState);
+//
+//    }
+
+//    @Override
+//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+//        if (savedInstanceState instanceof Bundle) {
+//            savedRecyclerState = ((Bundle) savedInstanceState).getParcelable(BUNDEL_RECYCLER_LAYOUT);
+//        }
+//        super.onRestoreInstanceState(savedInstanceState);
+//    }
 
     //
     private boolean isNetworkConnected() {
