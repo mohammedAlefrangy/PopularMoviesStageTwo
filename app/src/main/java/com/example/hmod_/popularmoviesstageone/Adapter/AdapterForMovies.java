@@ -24,10 +24,10 @@ public class AdapterForMovies extends RecyclerView.Adapter<AdapterForMovies.MyVi
     private final Context context;
     private final OnItemClickListener onItemClickListener;
 
+
     public interface OnItemClickListener {
         void onListItemClick(int clickedItemIndex);
     }
-
 
 
     public AdapterForMovies(ArrayList<Movie> movies, Context context, OnItemClickListener onItemClickListener) {
@@ -56,12 +56,13 @@ public class AdapterForMovies extends RecyclerView.Adapter<AdapterForMovies.MyVi
         return movies.size();
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         final ImageView imageView;
 
-        MyViewHolder(View itemView) {
+        public MyViewHolder(View itemView) {
             super(itemView);
+
             imageView = itemView.findViewById(R.id.moviePoster);
             itemView.setOnClickListener(this);
 
@@ -73,7 +74,10 @@ public class AdapterForMovies extends RecyclerView.Adapter<AdapterForMovies.MyVi
             int clickedPosition = getAdapterPosition();
             onItemClickListener.onListItemClick(clickedPosition);
         }
+
+
     }
+
 
     public void clear() {
         movies.clear();
@@ -84,7 +88,9 @@ public class AdapterForMovies extends RecyclerView.Adapter<AdapterForMovies.MyVi
         movies.add(movie);
         notifyItemInserted(movies.size() - 1);
     }
-//
+
+
+    //
 //    public void addAll(List<Movie> movieList) {
 //        if (movieList != null) {
 //            for (Movie movie : movieList) {
@@ -95,13 +101,12 @@ public class AdapterForMovies extends RecyclerView.Adapter<AdapterForMovies.MyVi
 //
     public void addAllFavorites(List<FavoritesMovieEntity> favoritesMovieEntities) {
         for (FavoritesMovieEntity favoritesMovieEntity : favoritesMovieEntities) {
-            addMovie(new Movie(favoritesMovieEntity.getOverViewForMovie(),favoritesMovieEntity.getPosterForMovie() ,
-                    favoritesMovieEntity.getReleaseDateForMovie() ,favoritesMovieEntity.getNameForMovie() ,
-                    favoritesMovieEntity.getVoteAverageForMovie() ,String.valueOf(favoritesMovieEntity.getIdForMovie())
-                    ));
+            addMovie(new Movie(favoritesMovieEntity.getOverViewForMovie(), favoritesMovieEntity.getPosterForMovie(),
+                    favoritesMovieEntity.getReleaseDateForMovie(), favoritesMovieEntity.getNameForMovie(),
+                    favoritesMovieEntity.getVoteAverageForMovie(), String.valueOf(favoritesMovieEntity.getIdForMovie())
+            ));
         }
     }
-
 
 
 //    public void setTasks(ArrayList<FavoritesMovieEntity> taskEntries) {

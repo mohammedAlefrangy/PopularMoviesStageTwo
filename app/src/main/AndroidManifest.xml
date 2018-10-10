@@ -14,17 +14,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!-- Got the method to use the configChanges from the site  https://developer.android.com/guide/topics/resources/runtime-changes  -->
         <activity
             android:name=".MainActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.DetailsMovieActivtiy" />
+        <activity
+            android:name=".Activity.DetailsMovieActivtiy"
+            android:screenOrientation="portrait" />
 
     </application>
 
