@@ -109,10 +109,10 @@ public class AdapterForMovies extends RecyclerView.Adapter<AdapterForMovies.MyVi
     }
 
 
-//    public void setTasks(ArrayList<FavoritesMovieEntity> taskEntries) {
-//        movies = taskEntries;
-//        notifyDataSetChanged();
-//    }
+    public void setTasks(ArrayList< Movie > taskEntries) {
+        movies = taskEntries;
+        notifyDataSetChanged();
+    }
 
 
 }

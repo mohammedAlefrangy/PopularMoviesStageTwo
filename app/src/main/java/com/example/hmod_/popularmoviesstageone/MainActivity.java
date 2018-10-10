@@ -59,7 +59,8 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
 
     GridLayoutManager layoutManager;
     private static final String SCROLL_POSITION_KEY = "scroll_position";
-    private Parcelable mSavedStateGridLayoutManager;
+    private Parcelable mListState;
+    private static int mCurrentPostion = 0;
 
 
     @Override
@@ -78,9 +79,12 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
         movies = new ArrayList<>();
         movieAdapter = new AdapterForMovies(movies, getApplicationContext(), onItemClickListener);
         recyclerView.setAdapter(movieAdapter);
+
         Log.d("movies", String.valueOf(movies));
 
-            saveInstanceMethod(savedInstanceState);
+
+
+        saveInstanceMethod(savedInstanceState);
 
 
         FavoritesMoviesDatabase mDb = FavoritesMoviesDatabase.getsInstance(getApplicationContext());
@@ -91,23 +95,10 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
         if (savedInstanceState != null && savedInstanceState.getString("KEY") != null) {
             Log.d(TAG, "onCreate: " + savedInstanceState.getString("Key"));
             if (savedInstanceState.getString("KEY").equals(POPULARE_STAT)) {
-//                mSavedStateGridLayoutManager = savedInstanceState.getParcelable(SCROLL_POSITION_KEY);
-//                if (mSavedStateGridLayoutManager != null) {
-//                    Log.d(TAG, "onOptionsItemSelected: mmmmmmmm " + mSavedStateGridLayoutManager);
-//                    layoutManager.onRestoreInstanceState(mSavedStateGridLayoutManager);
-//                }
                 getPopularMovies();
             } else if (savedInstanceState.getString("KEY").equals(TOPRATED_STAT)) {
-//                if (mSavedStateGridLayoutManager != null) {
-//                    Log.d(TAG, "onOptionsItemSelected: mmmmmmmm" + mSavedStateGridLayoutManager);
-//                    layoutManager.onRestoreInstanceState(mSavedStateGridLayoutManager);
-//                }
                 getTopRatedMovies();
             } else if (savedInstanceState.getString("KEY").equals(FAVORITES_STAT)) {
-//                if (mSavedStateGridLayoutManager != null) {
-//                    Log.d(TAG, "onOptionsItemSelected: mmmmmmmm" + mSavedStateGridLayoutManager);
-//                    layoutManager.onRestoreInstanceState(mSavedStateGridLayoutManager);
-//                }
                 getFavoritesMovies();
             }
         } else {
@@ -120,29 +111,21 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putString("KEY", CURRUNT_STAT);
-//        outState.putParcelable(SCROLL_POSITION_KEY, layoutManager.onSaveInstanceState());
-//        outState.putParcelable(SCROLL_POSITION, layoutManager.onSaveInstanceState());
-//        outState.putString("KEY", POSITION);
-//        Log.d(TAG, "onSaveInstanceState: " + "KEY " + POSITION);
         super.onSaveInstanceState(outState);
-
+        outState.putString("KEY", CURRUNT_STAT);
+        int positin = ((GridLayoutManager) (recyclerView.getLayoutManager())).findFirstCompletelyVisibleItemPosition();
+        outState.putInt(SCROLL_POSITION_KEY, positin);
     }
-//
-//    @Override
-//    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-//        super.onSaveInstanceState(outState, outPersistentState);
-//        Parcelable listState = recyclerView.getLayoutManager().onSaveInstanceState();
-//        outState.putParcelable(SCROLL_POSITION_KEY, listState);
-//    }
-//
-//    @Override
-//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-//        super.onRestoreInstanceState(savedInstanceState);
-//        Parcelable listState = savedInstanceState.getParcelable(SCROLL_POSITION_KEY);
-//        recyclerView.getLayoutManager().onRestoreInstanceState(listState);
-//
-//    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle state) {
+        super.onRestoreInstanceState(state);
+        // Retrieve list state and list/item positions
+        if (state != null) {
+            mCurrentPostion = state.getInt(SCROLL_POSITION_KEY, 0);
+        }
+    }
+
 
     private boolean isNetworkConnected() {
 
@@ -184,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int menuItemThatSelected = item.getItemId();
-
+        mCurrentPostion = 0 ;
         switch (menuItemThatSelected) {
             //if click on popular item in menu the app show popular movies
             case R.id.popular:
@@ -218,6 +201,12 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
         ArrayList<Movie> arrayList;
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            movieAdapter.clear();
+        }
+
+        @Override
         protected ArrayList<Movie> doInBackground(String... strings) {
 
 
@@ -240,7 +229,9 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
                 super.onPostExecute(movies1);
                 movies.addAll(movies1);
                 if (movies1 != null) {
-                    movieAdapter.notifyDataSetChanged();
+                    movieAdapter.setTasks(movies);
+                    recyclerView.scrollToPosition(mCurrentPostion);
+//                    movieAdapter.notifyDataSetChanged();
                 } else {
                     Toast.makeText(MainActivity.this, "You Should check the internt connection", Toast.LENGTH_SHORT).show();
                 }
@@ -250,13 +241,12 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
 
     private void getPopularMovies() {
         CURRUNT_STAT = POPULARE_STAT;
-        Log.d(TAG, "getPopularMovies: " + CURRUNT_STAT + POPULARE_STAT);
 
-        Log.d(TAG, "getPopularMovies: " + "getPopularMovies");
-        recyclerView.setAdapter(null);
-        movies = new ArrayList<>();
-        movieAdapter = new AdapterForMovies(movies, getApplicationContext(), onItemClickListener);
-        recyclerView.setAdapter(movieAdapter);
+//        recyclerView.setAdapter(null);
+//        movies = new ArrayList<>();
+//        movieAdapter = new AdapterForMovies(movies, getApplicationContext(), onItemClickListener);
+//        recyclerView.setAdapter(movieAdapter);
+//        recyclerView.scrollToPosition(mCurrentPostion);
         isNetworkConnected();
         if (isWifiConn == true) {
             networkHandler = new NetworkUtils();
@@ -270,12 +260,12 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
 
     private void getTopRatedMovies() {
         CURRUNT_STAT = TOPRATED_STAT;
-        Log.d(TAG, "getPopularMovies: " + CURRUNT_STAT + TOPRATED_STAT);
-        recyclerView.setAdapter(null);
-        movies = new ArrayList<>();
-        movieAdapter = new AdapterForMovies(movies, getApplicationContext(), onItemClickListener);
-        recyclerView.setAdapter(movieAdapter);
-
+//        Log.d(TAG, "getPopularMovies: " + CURRUNT_STAT + TOPRATED_STAT);
+//        recyclerView.setAdapter(null);
+//        movies = new ArrayList<>();
+//        movieAdapter = new AdapterForMovies(movies, getApplicationContext(), onItemClickListener);
+//        recyclerView.setAdapter(movieAdapter);
+//        recyclerView.scrollToPosition(mCurrentPostion);
         isNetworkConnected();
         if (isWifiConn == true) {
             networkHandler = new NetworkUtils();
