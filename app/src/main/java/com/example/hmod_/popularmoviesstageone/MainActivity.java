@@ -84,10 +84,11 @@ public class MainActivity extends AppCompatActivity implements AdapterForMovies.
 
         isNetworkConnected();
         if (isWifiConn == true) {
-            saveInstanceMethod(savedInstanceState);
+            getPopularMovies();
         } else {
             Toast.makeText(MainActivity.this, "You Should check the internt connection", Toast.LENGTH_SHORT).show();
         }
+        saveInstanceMethod(savedInstanceState);
 
 
         FavoritesMoviesDatabase mDb = FavoritesMoviesDatabase.getsInstance(getApplicationContext());
